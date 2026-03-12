@@ -1,26 +1,41 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary: #009de0;
+  --color-primary-dark: #0080b8;
+  --color-primary-light: #e6f5fc;
+  --color-track-idea: #f5c542;
+  --color-track-build: #34a853;
+  --color-track-scale: #7b2d8e;
+  --color-background: #fafbfc;
+  --color-foreground: #1a1a2e;
+  --color-card: #ffffff;
+  --color-card-border: #e5e7eb;
+  --color-card-selected: #e6f5fc;
+  --color-card-selected-border: #009de0;
+  --color-muted: #6b7280;
+  --color-badge-keynotes: #dbeafe;
+  --color-badge-keynotes-text: #1e40af;
+  --color-badge-product: #f3e8ff;
+  --color-badge-product-text: #6b21a8;
+  --color-badge-strategy: #fee2e2;
+  --color-badge-strategy-text: #991b1b;
+  --color-badge-revenue: #dcfce7;
+  --color-badge-revenue-text: #166534;
+  --color-badge-networking: #fef9c3;
+  --color-badge-networking-text: #854d0e;
+  --color-badge-partner: #ffedd5;
+  --color-badge-partner-text: #9a3412;
+  --font-heading: var(--font-hanken-grotesk);
+  --font-body: var(--font-archivo);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading), system-ui, sans-serif;
 }
