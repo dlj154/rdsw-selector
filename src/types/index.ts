@@ -107,6 +107,8 @@ export type HotnessLevel = 'popular' | 'deep-cut' | null;
 
 export type CityFilter = 'all' | 'Durham' | 'Raleigh';
 
+export type FocusPreference = 'product' | 'strategy' | 'revenue' | 'all';
+
 export interface EnrichedEvent {
   id: string;
   title: string;
@@ -149,6 +151,6 @@ export interface DaySchedule {
 
 export interface FilterState {
   location: CityFilter;
-  topics: PlayfulCategoryId[];
+  focus: FocusPreference;
   hotness: 'all' | 'popular' | 'deep-cut';
 }
