@@ -1,67 +1,45 @@
 'use client';
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
-const STORAGE_KEY = 'rdsw-selections';
+const STORAGE_KEY = 'rdsw-manual-overrides';
 
-function loadSelections(): Record<string, string | null> {
+function load(): Record<string, string> {
   if (typeof window === 'undefined') return {};
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : {};
-  } catch {
-    return {};
-  }
+    const s = localStorage.getItem(STORAGE_KEY);
+    return s ? JSON.parse(s) : {};
+  } catch { return {}; }
 }
 
-function saveSelections(selections: Record<string, string | null>) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(selections));
-  } catch {
-    // Silently fail if localStorage is full
-  }
+function save(data: Record<string, string>) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
 }
 
 export function useSchedule() {
-  const [selections, setSelections] = useState<Record<string, string | null>>({});
-  const [loaded, setLoaded] = useState(false);
+  const [manualOverrides, setManualOverrides] = useState<Record<string, string>>({});
+  const [ready, setReady] = useState(false);
 
-  // Load from localStorage on mount
   useEffect(() => {
-    setSelections(loadSelections());
-    setLoaded(true);
+    setManualOverrides(load());
+    setReady(true);
   }, []);
 
-  // Persist to localStorage on change
   useEffect(() => {
-    if (loaded) {
-      saveSelections(selections);
-    }
-  }, [selections, loaded]);
+    if (ready) save(manualOverrides);
+  }, [manualOverrides, ready]);
 
-  const toggleSelection = useCallback((slotId: string, eventId: string) => {
-    setSelections(prev => ({
-      ...prev,
-      [slotId]: prev[slotId] === eventId ? null : eventId,
-    }));
+  const setManualOverride = useCallback((slotId: string, eventId: string) => {
+    setManualOverrides(prev => ({ ...prev, [slotId]: eventId }));
   }, []);
 
-  const clearSelections = useCallback(() => {
-    setSelections({});
+  const clearManualOverride = useCallback((slotId: string) => {
+    setManualOverrides(prev => {
+      const next = { ...prev };
+      delete next[slotId];
+      return next;
+    });
   }, []);
 
-  const selectedEventIds = useMemo(() => {
-    return Object.values(selections).filter((id): id is string => id !== null);
-  }, [selections]);
-
-  const selectedCount = selectedEventIds.length;
-
-  return {
-    selections,
-    toggleSelection,
-    clearSelections,
-    selectedEventIds,
-    selectedCount,
-    loaded,
-  };
+  return { manualOverrides, setManualOverride, clearManualOverride, ready };
 }
