@@ -1,30 +1,26 @@
 'use client';
 
-import { FilterState, PlayfulCategoryId, CityFilter } from '@/types';
-import { CATEGORIES } from '@/lib/categories';
+import { FilterState, FocusPreference, CityFilter } from '@/types';
 
 interface FilterBarProps {
   filters: FilterState;
   onLocationChange: (location: CityFilter) => void;
-  onTopicToggle: (topic: PlayfulCategoryId) => void;
+  onFocusChange: (focus: FocusPreference) => void;
   onHotnessChange: (hotness: FilterState['hotness']) => void;
   onReset: () => void;
 }
-
-// Clearer descriptions shown as subtitle on each chip
-const CATEGORY_SUBTITLES: Record<string, string> = {
-  'main-stage': 'Keynotes & talks',
-  'build-cool-stuff': 'Product & AI',
-  'big-brain-energy': 'Strategy & vision',
-  'cha-ching': 'Sales & revenue',
-  'squad-goals': 'Networking',
-  'wildcard': 'Partner events',
-};
 
 const LOCATION_OPTIONS: { value: CityFilter; label: string }[] = [
   { value: 'all', label: 'All' },
   { value: 'Durham', label: '📍 Durham' },
   { value: 'Raleigh', label: '📍 Raleigh' },
+];
+
+const FOCUS_OPTIONS: { value: FocusPreference; label: string }[] = [
+  { value: 'all', label: '✨ Best of Each' },
+  { value: 'product', label: '🛠️ Product & Tech' },
+  { value: 'strategy', label: '🧠 Strategy & Growth' },
+  { value: 'revenue', label: '💰 Sales & Revenue' },
 ];
 
 const HOTNESS_OPTIONS: { value: FilterState['hotness']; label: string; sub: string }[] = [
@@ -36,13 +32,13 @@ const HOTNESS_OPTIONS: { value: FilterState['hotness']; label: string; sub: stri
 export default function FilterBar({
   filters,
   onLocationChange,
-  onTopicToggle,
+  onFocusChange,
   onHotnessChange,
   onReset,
 }: FilterBarProps) {
   const hasActiveFilters =
     filters.location !== 'all' ||
-    filters.topics.length > 0 ||
+    filters.focus !== 'all' ||
     filters.hotness !== 'all';
 
   return (
@@ -104,30 +100,24 @@ export default function FilterBar({
             )}
           </div>
 
-          {/* Row 2: Topic chips with two-line labels */}
+          {/* Row 2: Focus preference */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-muted">Topic</span>
-            {CATEGORIES.map(cat => {
-              const isActive = filters.topics.includes(cat.id);
-              return (
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted">Your Focus</span>
+            <div className="flex gap-1">
+              {FOCUS_OPTIONS.map(opt => (
                 <button
-                  key={cat.id}
-                  onClick={() => onTopicToggle(cat.id)}
-                  className={`inline-flex flex-col items-start rounded-lg px-3 py-1.5 text-left transition-all ${
-                    isActive
-                      ? `${cat.badgeClass} ${cat.badgeTextClass} ring-2 ring-offset-1 ring-current shadow-sm`
+                  key={opt.value}
+                  onClick={() => onFocusChange(opt.value)}
+                  className={`rounded-full px-3 py-1 text-sm font-medium transition-all ${
+                    filters.focus === opt.value
+                      ? 'bg-primary text-white shadow-sm'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
-                  <span className="text-sm font-semibold leading-tight">
-                    {cat.emoji} {cat.label}
-                  </span>
-                  <span className={`text-xs leading-tight ${isActive ? 'opacity-75' : 'text-gray-400'}`}>
-                    {CATEGORY_SUBTITLES[cat.id]}
-                  </span>
+                  {opt.label}
                 </button>
-              );
-            })}
+              ))}
+            </div>
           </div>
 
         </div>

@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import Header from '@/components/Header';
 import FilterBar from '@/components/FilterBar';
+import FocusPicker from '@/components/FocusPicker';
 import DayColumn from '@/components/DayColumn';
 import ExportBar from '@/components/ExportBar';
 import Footer from '@/components/Footer';
@@ -13,7 +14,7 @@ import { computeAutoRecommendations } from '@/lib/recommendations';
 
 export default function Home() {
   const { data, loading, error } = useEvents();
-  const { filters, setLocation, toggleTopic, setHotness, resetFilters } = useFilters();
+  const { filters, setLocation, setFocus, setHotness, resetFilters, isFocusSet, hydrated } = useFilters();
   const { manualOverrides, setManualOverride, clearManualOverride } = useSchedule();
 
   // Filter days by location (hard filter); show all events within each slot
@@ -89,7 +90,7 @@ export default function Home() {
       <FilterBar
         filters={filters}
         onLocationChange={setLocation}
-        onTopicToggle={toggleTopic}
+        onFocusChange={setFocus}
         onHotnessChange={setHotness}
         onReset={resetFilters}
       />
@@ -123,6 +124,8 @@ export default function Home() {
         totalSlots={totalSlots}
         selectedEventIds={selectedEventIds}
       />
+
+      {hydrated && !isFocusSet && <FocusPicker onSelect={setFocus} />}
     </div>
   );
 }

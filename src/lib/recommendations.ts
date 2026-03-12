@@ -1,4 +1,10 @@
-import { EnrichedEvent, FilterState, TimeSlot, DaySchedule } from '@/types';
+import { EnrichedEvent, FilterState, FocusPreference, TimeSlot, DaySchedule } from '@/types';
+
+const FOCUS_TO_CATEGORY: Record<Exclude<FocusPreference, 'all'>, string> = {
+  product: 'build-cool-stuff',
+  strategy: 'big-brain-energy',
+  revenue: 'cha-ching',
+};
 
 export function scoreEvent(event: EnrichedEvent, filters: FilterState): number {
   let score = 0;
@@ -6,8 +12,10 @@ export function scoreEvent(event: EnrichedEvent, filters: FilterState): number {
   // Location match: +3
   if (filters.location === 'all' || event.city === filters.location) score += 3;
 
-  // Topic match: +5 (highest weight — this is what the user cares most about)
-  if (filters.topics.length === 0 || filters.topics.includes(event.category.id)) score += 5;
+  // Focus match: +5 for matching category; 'all' = no category bonus
+  if (filters.focus !== 'all') {
+    if (event.category.id === FOCUS_TO_CATEGORY[filters.focus]) score += 5;
+  }
 
   // Hotness match: +2
   if (filters.hotness === 'all' || event.hotness === filters.hotness) score += 2;
@@ -49,7 +57,8 @@ export function computeAutoRecommendations(
 /** Returns true if the event is a perfect match for all active filters */
 export function isPerfectMatch(event: EnrichedEvent, filters: FilterState): boolean {
   const locationOk = filters.location === 'all' || event.city === filters.location;
-  const topicOk = filters.topics.length === 0 || filters.topics.includes(event.category.id);
+  const focusOk = filters.focus === 'all' ||
+    event.category.id === FOCUS_TO_CATEGORY[filters.focus];
   const hotnessOk = filters.hotness === 'all' || event.hotness === filters.hotness;
-  return locationOk && topicOk && hotnessOk;
+  return locationOk && focusOk && hotnessOk;
 }
