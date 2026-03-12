@@ -125,7 +125,15 @@ export default function Home() {
         selectedEventIds={selectedEventIds}
       />
 
-      {hydrated && !isFocusSet && <FocusPicker onSelect={setFocus} />}
+      {hydrated && !isFocusSet && (
+        <FocusPicker
+          onSelect={({ focus, location, hotness }) => {
+            setFocus(focus);
+            setLocation(location);
+            setHotness(hotness);
+          }}
+        />
+      )}
     </div>
   );
 }
