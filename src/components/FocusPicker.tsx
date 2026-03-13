@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { FocusPreference, CityFilter, FilterState } from '@/types';
 
 export interface PickerPrefs {
@@ -168,6 +169,26 @@ export default function FocusPicker({ onSelect }: FocusPickerProps) {
         >
           Build My Schedule →
         </button>
+
+        {/* InsightStack attribution */}
+        <p className="mt-5 flex items-center justify-center gap-1.5 text-xs text-muted/50">
+          Built by{' '}
+          <a
+            href="https://www.insight-stack.ai/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 font-medium text-muted/70 transition-colors hover:text-primary"
+          >
+            <Image
+              src="/insightstack-logo.png"
+              alt="InsightStack"
+              height={12}
+              width={14}
+              className="inline-block"
+            />
+            InsightStack
+          </a>
+        </p>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { fetchEvents } from '@/lib/luma-api';
 import { groupIntoSchedule } from '@/lib/time-slots';
 import { decodeSchedule } from '@/lib/schedule-codec';
@@ -113,6 +114,24 @@ export default async function SharedSchedulePage({
         <p className="mt-2 text-sm opacity-75">
           {selectedEvents.length} session{selectedEvents.length !== 1 ? 's' : ''} selected
         </p>
+        <p className="mt-3 flex items-center justify-center gap-1.5 text-xs opacity-60">
+          Built with{' '}
+          <a
+            href="https://www.insight-stack.ai/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 font-semibold opacity-100 underline underline-offset-2 transition-opacity hover:opacity-80"
+          >
+            <Image
+              src="/insightstack-logo.png"
+              alt="InsightStack"
+              height={14}
+              width={17}
+              className="inline-block"
+            />
+            InsightStack
+          </a>
+        </p>
       </header>
 
       <main className="mx-auto max-w-3xl px-4 py-8">
@@ -136,6 +155,24 @@ export default async function SharedSchedulePage({
           >
             Build Your Own Schedule →
           </a>
+          <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-muted/60">
+            Tool built by{' '}
+            <a
+              href="https://www.insight-stack.ai/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 font-medium text-muted/80 transition-colors hover:text-primary"
+            >
+              <Image
+                src="/insightstack-logo.png"
+                alt="InsightStack"
+                height={14}
+                width={17}
+                className="inline-block"
+              />
+              InsightStack
+            </a>
+          </p>
         </div>
       </main>
     </div>
